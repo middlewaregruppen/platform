@@ -47,6 +47,9 @@ flux-up: ## Deploy Flux Operator on the Kubernetes KinD cluster.
 flux-sync: ## Sync the local cluster with the remote Git repository.
 	./scripts/flux-sync.sh
 
+flux-web: ## Port forward the Flux Operator web interface to localhost:9080.
+	kubectl -n flux-system port-forward svc/flux-operator 9080:9080
+
 ##@ Help
 
 .PHONY: help
