@@ -47,8 +47,9 @@ spec:
         name: flux-appx-<< inputs.id >>
         namespace: apps-preview
         annotations:
-          event.toolkit.fluxcd.io/branch: << inputs.branch | quote >>
+          event.toolkit.fluxcd.io/change_request: << inputs.id | quote >>
           event.toolkit.fluxcd.io/commit: << inputs.sha | quote >>
+          event.toolkit.fluxcd.io/branch: << inputs.branch | quote >>
           event.toolkit.fluxcd.io/author: << inputs.author | quote >>
       spec:
         interval: 1h
