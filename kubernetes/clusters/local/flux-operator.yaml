@@ -1,0 +1,84 @@
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  annotations:
+    fluxcd.controlplane.io/reconcileTimeout: 5m
+  labels:
+    app.kubernetes.io/instance: flux-operator
+    app.kubernetes.io/name: flux-operator
+  name: flux-operator
+  namespace: flux-system
+spec:
+  inputs:
+    - interval: 1h
+      url: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests
+  resources:
+    - apiVersion: source.toolkit.fluxcd.io/v1
+      kind: OCIRepository
+      metadata:
+        name: << inputs.provider.name >>
+        namespace: << inputs.provider.namespace >>
+      spec:
+        interval: << inputs.interval | quote >>
+        ref:
+          tag: latest
+        url: << inputs.url | quote >>
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: << inputs.provider.name >>
+        namespace: << inputs.provider.namespace >>
+      spec:
+        commonMetadata:
+          labels:
+            app.kubernetes.io/instance: flux-operator
+            app.kubernetes.io/name: flux-operator
+        deletionPolicy: Orphan
+        force: true
+        interval: 24h
+        patches:
+          - patch: |-
+              - op: replace
+                path: "/spec/selector/matchLabels"
+                value:
+                  app.kubernetes.io/name: flux-operator
+                  app.kubernetes.io/instance: flux-operator
+              - op: replace
+                path: "/spec/template/metadata/labels"
+                value:
+                  app.kubernetes.io/name: flux-operator
+                  app.kubernetes.io/instance: flux-operator
+              - op: add
+                path: "/spec/template/spec/containers/0/env/-"
+                value:
+                  name: WEB_CONFIG_SECRET_NAME
+                  value: "<< inputs.provider.name >>-web-config"
+            target:
+              kind: Deployment
+        path: ./flux-operator
+        prune: true
+        retryInterval: 5m
+        serviceAccountName: << inputs.provider.name >>
+        sourceRef:
+          kind: OCIRepository
+          name: << inputs.provider.name >>
+        timeout: 5m
+        wait: true
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: << inputs.provider.name >>-web-config
+        namespace: << inputs.provider.namespace >>
+      stringData:
+        config.yaml: |
+          apiVersion: web.fluxcd.controlplane.io/v1
+          kind: Config
+          spec:
+            baseURL: http://localhost:9080
+            insecure: true
+            authentication:
+              type: Anonymous
+              anonymous:
+                username: cluster-admin
+                groups:
+                  - system:masters

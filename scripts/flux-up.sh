@@ -22,6 +22,7 @@ source "${CREDS_DIR}/.env"
 echo "Starting cluster bootstrap"
 flux-operator install \
   -f ./kubernetes/clusters/local/instance.yaml \
+  --auto-update=false \
   --instance-sync-gha-app-id="${GITHUB_APP_ID}" \
   --instance-sync-gha-installation-owner="${GITHUB_APP_OWNER}" \
   --instance-sync-gha-private-key-file="${CREDS_DIR}/private-key.pem"
