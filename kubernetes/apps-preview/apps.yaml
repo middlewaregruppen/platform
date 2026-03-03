@@ -19,7 +19,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: appx-<< inputs.id >>
+        name: << inputs.provider.name >>-<< inputs.id >>
         namespace: << inputs.provider.namespace >>
         annotations:
           event.toolkit.fluxcd.io/change_request: << inputs.id | quote >>
@@ -28,7 +28,7 @@ spec:
           event.toolkit.fluxcd.io/author: << inputs.author | quote >>
       spec:
         interval: 1h
-        releaseName: appx-<< inputs.id >>
+        releaseName: << inputs.provider.name >>-<< inputs.id >>
         serviceAccountName: dev-team
         chartRef:
           kind: HelmChart
@@ -43,7 +43,7 @@ spec:
     - apiVersion: notification.toolkit.fluxcd.io/v1beta3
       kind: Provider
       metadata:
-        name: github-pr-<< inputs.name >>
+        name: github-pr-<< inputs.provider.name >>
         namespace: << inputs.provider.namespace >>
       spec:
         type: githubpullrequestcomment
@@ -55,21 +55,21 @@ spec:
     - apiVersion: notification.toolkit.fluxcd.io/v1beta3
       kind: Alert
       metadata:
-        name: github-pr-<< inputs.name >>-<< inputs.id >>
+        name: github-pr-<< inputs.provider.name >>-<< inputs.id >>
         namespace: << inputs.provider.namespace >>
       spec:
         providerRef:
-          name: github-pr-<< inputs.name >>
+          name: github-pr-<< inputs.provider.name >>
         eventSeverity: info
         eventSources:
           - kind: HelmRelease
-            name: appx-<< inputs.id >>
+            name: << inputs.provider.name >>-<< inputs.id >>
     # This Provider template holds the configuration for committing status updates on the pull requests.
     # A Provider is generated for each app repo and can is shared for all PRs from that repo.
     - apiVersion: notification.toolkit.fluxcd.io/v1beta3
       kind: Provider
       metadata:
-        name: github-commit-<< inputs.name >>
+        name: github-commit-<< inputs.provider.name >>
         namespace: << inputs.provider.namespace >>
       spec:
         type: github
@@ -81,12 +81,12 @@ spec:
     - apiVersion: notification.toolkit.fluxcd.io/v1beta3
       kind: Alert
       metadata:
-        name: github-commit-<< inputs.name >>-<< inputs.id >>
+        name: github-commit-<< inputs.provider.name >>-<< inputs.id >>
         namespace: << inputs.provider.namespace >>
       spec:
         providerRef:
-          name: github-commit-<< inputs.name >>
+          name: github-commit-<< inputs.provider.name >>
         eventSeverity: info
         eventSources:
           - kind: HelmRelease
-            name: appx-<< inputs.id >>
+            name: << inputs.provider.name >>-<< inputs.id >>
