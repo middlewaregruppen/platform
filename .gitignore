@@ -33,3 +33,4 @@ github-app-auth/
 # Editor/IDE
 # .idea/
 # .vscode/
+.mcp.json
