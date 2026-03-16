@@ -50,6 +50,11 @@ flux-sync: ## Sync the local cluster with the remote Git repository.
 flux-web: ## Port forward the Flux Operator web interface to localhost:9080.
 	kubectl -n flux-system port-forward svc/flux-operator 9080:9080
 
+.PHONY: preview
+preview: ## Port forward a PR preview app to localhost:8080 (usage: make preview PR=7).
+	@if [ -z "$(PR)" ]; then echo "Usage: make preview PR=<number>"; exit 1; fi
+	kubectl -n apps-preview port-forward svc/appx-$(PR) 8080:80
+
 ##@ Help
 
 .PHONY: help

@@ -29,7 +29,7 @@ Create `github-app-auth/.env` with the following content:
 
 ```bash
 GITHUB_APP_ID=<your-app-id>
-GITHUB_APP_INSTALLATION_ID=<your-app-installation-id>
+GITHUB_APP_OWNER=<your-gh-org>
 ```
 
 Copy your GitHub App private key to `github-app-auth/private-key.pem`.
@@ -39,9 +39,6 @@ under **Settings > Developer settings > GitHub Apps**.
 
 The private key can be generated from the same page under **Private keys**.
 
-The installation ID is available in the URL of your GitHub App installation
-under **Settings > Developer settings > GitHub Apps > Your App > Installations**.
-
 ## Cluster bootstrap
 
 Start the dev environment with:
@@ -50,8 +47,14 @@ Start the dev environment with:
 make up
 ```
 
-Access the Flux Web UI:
+Access the Flux Web UI (runs port-forward, use a separate shell window):
 
 ```bash
-kubectl -n flux-system port-forward svc/flux-operator 9080:9080
+make flux-web
+```
+
+Access the App preview using the PR number (runs port-forward, use a separate shell window):
+
+```bash
+make preview PR=<number>
 ```
