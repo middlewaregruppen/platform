@@ -7,7 +7,7 @@ spec:
   distribution:
     version: "2.x"
     registry: "ghcr.io/fluxcd"
-    artifact: "oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests:latest"
+    artifact: "oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests:v0.46.0"
   components:
     - source-controller
     - kustomize-controller
@@ -23,7 +23,7 @@ spec:
   sync:
     kind: GitRepository
     provider: github
-    url: "https://github.com/pull-request-wars-fluxcd/platform"
+    url: "https://github.com/middlewaregruppen/platform"
     ref: "refs/heads/main"
     path: "kubernetes/clusters/local"
     pullSecret: github-app-auth
