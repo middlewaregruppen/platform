@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   type: github
-  address: https://github.com/pull-request-wars-fluxcd/platform
+  address: https://github.com/middlewaregruppen/platform
   secretRef:
     name: github-app-auth
 ---
