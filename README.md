@@ -2,6 +2,12 @@
 
 ## Prerequisites
 
+### Flux Operator CLI
+
+See the documentation for how to install it.
+
+[https://fluxoperator.dev/docs/guides/install/](https://fluxoperator.dev/docs/guides/install/)
+
 ### Repository setup
 
 Fork the platform repository in your own GitHub organization and clone it locally.
@@ -12,6 +18,7 @@ to point to your forked repository. Commit and push the changes to your fork.
 ### GitHub App setup
 
 Create a GitHub App in your organization with the following permissions:
+
 - Repository permissions:
   - Commit statuses: Read and write
   - Contents: Read-only
